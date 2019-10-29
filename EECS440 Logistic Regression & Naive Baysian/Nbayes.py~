@@ -1,0 +1,108 @@
+import numpy as np
+import pandas as pd
+import math
+import mldata
+from data import *
+NUM_BUCKETS = 15
+
+
+class Nbayes():
+    def __init__(self, m, features, labels, features_info):
+        self.m = m
+        self.features = features
+        self.labels = labels
+        self.features_info = features_info
+        #create buckets to place features into and probabilities for each
+        for i in features_info:
+            if i.tup[1] == 'NOMINAL':
+                buckets = len(i)-2
+            else:
+                buckets = NUM_BUCKETS
+
+        probs = np.zeroes((2,buckets))
+        probs[:,:] = 1 / buckets
+
+        for i in features_info:
+            if i.tup[1] == 'NOMINAL':
+                #standardize values
+                features[i]
+            else:
+                #standardize values
+                features[i]
+
+
+
+
+dataset = input("Dataset options: volcanoes, spam, voting")
+crossvalidation = input("Cross validation? 0/1")
+depthlimit = input("Depth Limit")
+GR = input("Use gain ratio? 0/1")
+m = input("input value for m")
+features = None
+labels = None
+globaltype = None
+#read data and get "features_infO" which contains nominal/continuous and domain of the feature
+if dataset == "volcanoes":
+    features_info = mldata.parse_c45("volcanoes","DATA/volcanoes").schema.features[1:]
+if dataset == "spam":
+    features_info = mldata.parse_c45("spam","DATA/spam").schema.features[1:]
+if dataset == "voting":
+    features_info = mldata.parse_c45("voting","DATA/voting").schema.features[1:]
+if crossvalidation == 0:
+    if dataset == "volcanoes":
+        features, labels, globaltype = loadVolcanesData(True)
+    if dataset == "spam":
+        features, labels, globaltype = loadSpamData(True,True)
+    if dataset == "voting":
+        features, labels, globaltype = loadVotingData(True,True)
+    else:
+        print("unsupported dataset")
+else:
+    if dataset == "volcanoes":
+        cvsets,globaltype = foldedCVVolcano()
+        cv1 = cvsets[0]
+        cv2 = cvsets[1]
+        features = cv1[:, 2:-1]
+        labels = cv1[:, -1]
+        test_features = cv2[:, 2:-1]
+        test_labels = cv2[:, -1]
+    if dataset == "spam":
+        cvsets,globaltype = foldedCVVSpan()
+        cv1 = cvsets[0]
+        cv2 = cvsets[1]
+        features = cv1[:, 2:-1]
+        labels = cv1[:, -1]
+        test_features = cv2[:, 2:-1]
+        test_labels = cv2[:, -1]
+    if dataset == "voting":
+        cvsets,globaltype = foldedCVVoting()
+        cv1 = cvsets[0]
+        cv2 = cvsets[1]
+        features = cv1[:, 2:-1]
+        labels = cv1[:, -1]
+        test_features = cv2[:, 2:-1]
+        test_labels = cv2[:, -1]
+    else:
+        print("unsupported dataset")
+
+prec = 0.0
+if crossvalidation == 0:
+    correct = 0
+    test = features.shape[0] - 5
+    for i in range(1, test):
+        prediction = top.classify(features[i])
+        answer = labels[i]
+        if prediction == answer:
+            correct += 1
+        prec = correct/test
+else:
+    correct = 0
+    test = test_features.shape[0]
+    for i in range(1, test):
+        prediction = top.classify(features[i])
+        answer = labels[i]
+        if prediction == answer:
+            correct += 1
+        prec = correct/test
+
+n = Nbayes(m, features, labels, features_info)
