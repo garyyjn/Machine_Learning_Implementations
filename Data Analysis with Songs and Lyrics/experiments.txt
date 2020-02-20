@@ -1,0 +1,13 @@
+Experiments done:
+Linear Regression between word appearance vectors and popularity under following conditions
+1)	Naïve Vectors (Data in Separate File)
+a.	No regularization
+b.	Lasso(rough tune)
+c.	Ridge(rough tune)
+Logistic Regression to classify
+1)	Naïve Vectors
+a.	No regularization test\ validation score: 0.9925 0.48
+
+
+Experiments todo:
+Use different Word Vectors
